@@ -1,0 +1,60 @@
+#!/bin/bash --
+
+PATH='/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin'
+
+name='hltv'
+basedir="/usr/games/hlds"
+command="$1"
+prog=`basename $0`
+
+
+do_start()
+{
+    #cd "$basedir"
+    #export LD_LIBRARY_PATH=".:$LD_LIBRARY_PATH"
+    screen -d -m -S $name ~/hltvstarter
+}
+
+do_stop()
+{
+    kill `screen -ls | grep -e "\.$name" | awk '{print $1}' | sed -e 's/\..*//g'`
+}
+
+do_clean_demos()
+{
+    cd "$basedir/cstrike/demos"
+    # clena up over 100MB size demos
+    find . -type f -name "*.dem" -size +100000k -print0 | xargs -0 rm -f
+    # clena up under 5MB size demos
+    find . -type f -name "*.dem" -size -5000k -print0 | xargs -0 rm -f
+    # clean up over 7 days demos
+    find . -type f -name "*.dem" -ctime +6 -print0 | xargs -0 rm -f
+}
+
+do_usage()
+{
+    echo "$prog start   - start $name"
+    echo "$prog stop    - stop $name"
+    echo "$prog restart - restart $name"
+}
+
+case "$command" in
+    start)
+        do_start
+        ;;
+    stop)
+        do_stop
+        ;;
+    restart)
+        do_stop
+        do_clean_demos
+        do_start
+        ;;
+    clean)
+        do_clean_demos
+        ;;
+    *)
+        do_usage
+        ;;
+esac
+exit 0
