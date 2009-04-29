@@ -10,9 +10,9 @@ prog=`basename $0`
 
 do_start()
 {
-    #cd "$basedir"
-    #export LD_LIBRARY_PATH=".:$LD_LIBRARY_PATH"
-    screen -d -m -S $name ~/hltvstarter
+    cd "$basedir"
+    export LD_LIBRARY_PATH=".:$LD_LIBRARY_PATH"
+    screen -d -m -S $name ./hlds_run -binary ./hltv
 }
 
 do_stop()
