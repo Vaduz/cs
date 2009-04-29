@@ -1,8 +1,0 @@
-#!/bin/bash --
-
-PATH='/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin'
-
-basedir="/usr/games/hlds"
-cd "$basedir"
-export LD_LIBRARY_PATH=".:$LD_LIBRARY_PATH"
-./hltv +exec $basedir/hltv.cfg
