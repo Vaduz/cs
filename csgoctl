@@ -1,0 +1,45 @@
+#!/bin/bash --
+
+PATH='/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin'
+
+name='csgo'
+basedir="/home/srcds/steamcmd/csgo"
+command="$1"
+prog=`basename $0`
+
+
+do_start()
+{
+    cd "$basedir"
+    screen -d -m -S $name $basedir/srcds_run -game csgo -console +game_type 0 +game_mode 0 +mapgroup mg_active +map de_dust2 -tickrate 128 -steam_dir ~/steamcmd -steamcmd_script steamupdate -autoupdate
+}
+
+do_stop()
+{
+    kill `screen -ls | grep -e "\.$name" | awk '{print $1}' | sed -e 's/\..*//g'`
+}
+
+do_usage()
+{
+    echo "$prog start   - start $name"
+    echo "$prog stop    - stop $name"
+    echo "$prog restart - restart $name"
+}
+
+case "$command" in
+    start)
+        do_start
+        ;;
+    stop)
+        do_stop
+        ;;
+    restart)
+        do_stop
+        do_start
+        ;;
+    *)
+        do_usage
+        ;;
+esac
+exit 0
+
